@@ -21,12 +21,16 @@ namespace Avalanche_Price_Bot
 
         private async Task MainAsync()
         {
+            
             _client = new DiscordSocketClient();
             _commands = new CommandService();
+
             await _commands.AddModuleAsync<Commands>(null);
             _client.MessageReceived += HandleCommandAsync;
+
             await _client.LoginAsync(TokenType.Bot, "BotTokenHere");
             await _client.StartAsync();
+            await _client.SetGameAsync("Message me !prices");
             await Task.Delay(-1);
         }
 
@@ -48,12 +52,12 @@ namespace Avalanche_Price_Bot
     {
         [Command("prices")]
         public async Task PricesAsync()
-        {           
-                string itemTypes = "any";
-                string query = "query GetItems { Items: items(types: [" + itemTypes + "]) { id name avg24hPrice sellFor{ price source } } }";
-                var request = new HttpRequestMessage(HttpMethod.Post, "https://api.tarkov.dev/graphql");
-                request.Content = new StringContent(JsonConvert.SerializeObject(new { query }), Encoding.UTF8, "application/json");
-                var client = new HttpClient();
+        {
+            string itemTypes = "any";
+            string query = "query GetItems { Items: items(types: [" + itemTypes + "]) { id name avg24hPrice sellFor{ price source } } }";
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://api.tarkov.dev/graphql");
+            request.Content = new StringContent(JsonConvert.SerializeObject(new { query }), Encoding.UTF8, "application/json");
+            var client = new HttpClient();
             try
             {
                 var response = await client.SendAsync(request);
@@ -83,7 +87,7 @@ namespace Avalanche_Price_Bot
                 }
                 var file = File.OpenRead("24HourAveragePrices.txt");
                 var memoryStream = new MemoryStream();
-                file.CopyTo(memoryStream);               
+                file.CopyTo(memoryStream);
                 memoryStream.Position = 0;
                 await Context.Channel.SendFileAsync(memoryStream, "24HourAveragePrices.txt");
                 file.Dispose();
