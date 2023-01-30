@@ -28,7 +28,7 @@ namespace Avalanche_Price_Bot
             await _commands.AddModuleAsync<Commands>(null);
             _client.MessageReceived += HandleCommandAsync;
 
-            await _client.LoginAsync(TokenType.Bot, "MTA2OTY3ODcwOTc2Nzk0MjI0Nw.G5cHlq.VvPH-mQcIJ9QENU-PpwZWG5_-SLcT_VmVJWHPQ");
+            await _client.LoginAsync(TokenType.Bot, "YourBotTokenHere");
             await _client.StartAsync();
             await _client.SetGameAsync("Message me !prices");
             await Task.Delay(-1);
